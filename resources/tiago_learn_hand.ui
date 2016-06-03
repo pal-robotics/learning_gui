@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LearningGUI</class>
+ <widget class="QMainWindow" name="LearningGUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1068</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Learning GUI</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>1041</width>
+      <height>741</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="col2">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="gravity_b">
+           <property name="text">
+            <string>Gravity Comp</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="position_b">
+           <property name="text">
+            <string>Position</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="start_b">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>START</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="stop_b">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>STOP</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QPushButton" name="play_2_b">
+           <property name="text">
+            <string>Play 0.5X</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="play_05_b">
+           <property name="text">
+            <string>Play 1X</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="play_1_b">
+           <property name="text">
+            <string>Play 2X</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QPushButton" name="save_b">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Save motion to file</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="col1">
+       <item>
+        <layout class="QHBoxLayout" name="row0">
+         <item>
+          <widget class="QLabel" name="head_1_l">
+           <property name="text">
+            <string>head_1</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="head_1_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="head_1_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row1">
+         <item>
+          <widget class="QLabel" name="head_2_l">
+           <property name="text">
+            <string>head_2</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="head_2_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="head_2_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row2">
+         <item>
+          <widget class="QLabel" name="arm_1_l">
+           <property name="text">
+            <string>arm_1</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="arm_1_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="arm_1_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row3">
+         <item>
+          <widget class="QLabel" name="arm_2_l">
+           <property name="text">
+            <string>arm_2</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="arm_2_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="arm_2_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row4">
+         <item>
+          <widget class="QLabel" name="arm_3_l">
+           <property name="text">
+            <string>arm_3</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="arm_3_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="arm_3_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row5">
+         <item>
+          <widget class="QLabel" name="arm_4_l">
+           <property name="text">
+            <string>arm_4</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="arm_4_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="arm_4_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row6">
+         <item>
+          <widget class="QLabel" name="arm_5_l">
+           <property name="text">
+            <string>arm_5</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="arm_5_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="arm_5_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row7">
+         <item>
+          <widget class="QLabel" name="arm_6_l">
+           <property name="text">
+            <string>arm_6</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="arm_6_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="arm_6_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row8">
+         <item>
+          <widget class="QLabel" name="arm_7_l">
+           <property name="text">
+            <string>arm_7</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="arm_7_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="arm_7_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row9">
+         <item>
+          <widget class="QLabel" name="torso_lift_l">
+           <property name="text">
+            <string>torso_lift</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="torso_lift_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="torso_lift_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row10">
+         <item>
+          <widget class="QLabel" name="hand_index_l">
+           <property name="text">
+            <string>hand_index</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="hand_index_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="hand_index_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row11">
+         <item>
+          <widget class="QLabel" name="hand_mrl_l">
+           <property name="text">
+            <string>hand_mrl</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="hand_mrl_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="hand_mrl_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="row12">
+         <item>
+          <widget class="QLabel" name="hand_thumb_l">
+           <property name="text">
+            <string>hand_thumb</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="hand_thumb_slider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="hand_thumb_cb">
+           <property name="text">
+            <string>Learn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

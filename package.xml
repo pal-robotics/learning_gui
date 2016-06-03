@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>learning_gui</name>
+  <version>0.0.0</version>
+  <description>The learning_gui package</description>
+
+  <author email="sam.pfeiffer@pal-robotics.com">Sam Pfeiffer</author>
+  <maintainer email="sam.pfeiffer@pal-robotics.com">Sam Pfeiffer</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rospy</build_depend>
+  <run_depend>rospy</run_depend>
+
+
+</package>

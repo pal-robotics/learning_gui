@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1068</width>
-    <height>768</height>
+    <width>1091</width>
+    <height>817</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -373,21 +373,21 @@
        <item>
         <layout class="QHBoxLayout" name="row10">
          <item>
-          <widget class="QLabel" name="hand_index_l">
+          <widget class="QLabel" name="gripper_left_finger_l">
            <property name="text">
-            <string>hand_index</string>
+            <string>gripper_left_finger</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QSlider" name="hand_index_slider">
+          <widget class="QSlider" name="gripper_left_finger_slider">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="hand_index_cb">
+          <widget class="QCheckBox" name="gripper_left_finger_cb">
            <property name="text">
             <string>Learn</string>
            </property>
@@ -398,46 +398,21 @@
        <item>
         <layout class="QHBoxLayout" name="row11">
          <item>
-          <widget class="QLabel" name="hand_mrl_l">
+          <widget class="QLabel" name="gripper_right_finger_l">
            <property name="text">
-            <string>hand_mrl</string>
+            <string>gripper_right_finger</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QSlider" name="hand_mrl_slider">
+          <widget class="QSlider" name="gripper_right_finger_slider">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="hand_mrl_cb">
-           <property name="text">
-            <string>Learn</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="row12">
-         <item>
-          <widget class="QLabel" name="hand_thumb_l">
-           <property name="text">
-            <string>hand_thumb</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSlider" name="hand_thumb_slider">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="hand_thumb_cb">
+          <widget class="QCheckBox" name="gripper_right_finger_cb">
            <property name="text">
             <string>Learn</string>
            </property>
@@ -449,6 +424,16 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1091</width>
+     <height>25</height>
+    </rect>
+   </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

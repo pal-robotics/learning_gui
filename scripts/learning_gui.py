@@ -16,6 +16,7 @@ from controller_manager_msgs.srv import ListControllers, ListControllersRequest,
 from simple_learning.srv import Learn, LearnRequest, LearnResponse
 from marco_tools.control_mode_management import change_to_controller
 from copy import deepcopy
+import yaml
 import sys
 import signal
 from PyQt4 import QtGui, uic
@@ -292,7 +293,15 @@ class LearningGUI(QtGui.QMainWindow):
     def on_save(self):
         # self.last_motion_text has the motion in text
         # get from my qt tutorial how to open a save window
-        pass
+        # path = QtGui.QFileDialog.getOpenFileName()
+        path = QtGui.QFileDialog.getSaveFileName()
+        if path != '':
+            # get the motion from param server
+            param = rospy.get_param('/play_motion/motions/LBD_1X')
+            d = {'play_motion': {'motions': {'LBD_1X': param}}}
+            text_motion = yaml.dump(d)
+            with open(path, 'w') as f:
+                f.write(text_motion)
 
     def add_cb_to_class_by_joint_name(self, joint_name):
         # Create dynamically a method to be called

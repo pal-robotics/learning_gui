@@ -463,6 +463,9 @@ class LearningGUI(QtGui.QMainWindow):
 
     def get_pub_for(self, joint_name):
         group = joint_name.split('_')[0]
+        if group == 'arm':
+            if self.controller_mode == 'gravity':
+                return self.wrist_pub
         return self.__getattribute__(group + '_pub')
 
     def update_gui(self, *args):

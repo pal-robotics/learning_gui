@@ -124,6 +124,7 @@ class LearningGUI(QtGui.QMainWindow):
                                 'arm_4_joint', 'arm_5_joint', 'arm_6_joint', 'arm_7_joint',
                                 'torso_lift_joint',
                                 'hand_index_joint', 'hand_mrl_joint', 'hand_thumb_joint']
+            self.eef = 'hand'
         elif "gripper_left_finger_joint" in self.last_js.name:
             uic.loadUi(path + '/resources/tiago_learn_gripper.ui', self)
             self.joint_names = ['head_1_joint', 'head_2_joint',
@@ -131,6 +132,7 @@ class LearningGUI(QtGui.QMainWindow):
                                 'arm_4_joint', 'arm_5_joint', 'arm_6_joint', 'arm_7_joint',
                                 'torso_lift_joint',
                                 'gripper_left_finger_joint', 'gripper_right_finger_joint']
+            self.eef = 'gripper'
         self.set_sliders_limits()
         self.set_callbacks_sliders()
         self.controllers_srv = rospy.ServiceProxy('/controller_manager/list_controllers',
@@ -237,6 +239,48 @@ class LearningGUI(QtGui.QMainWindow):
 
         # Save motion to file
         self.save_b.clicked.connect(self.on_save)
+
+        # Checkboxes
+        self.arm_1_cb.stateChanged.connect(self.check_all_arm)
+        self.arm_2_cb.stateChanged.connect(self.check_all_arm)
+        self.arm_3_cb.stateChanged.connect(self.check_all_arm)
+        self.arm_4_cb.stateChanged.connect(self.check_all_arm)
+        self.arm_5_cb.stateChanged.connect(self.check_all_arm)
+        self.arm_6_cb.stateChanged.connect(self.check_all_arm)
+        self.arm_7_cb.stateChanged.connect(self.check_all_arm)
+
+        if self.eef == 'gripper':
+            self.gripper_left_finger_cb.stateChanged.connect(self.check_all_gripper)
+            self.gripper_right_finger_cb.stateChanged.connect(self.check_all_gripper)
+        else:
+            self.hand_index_cb.stateChanged.connect(self.check_all_hand)
+            self.hand_mrl_cb.stateChanged.connect(self.check_all_hand)
+            self.hand_thumb_cb.stateChanged.connect(self.check_all_hand)
+
+        self.head_1_cb.stateChanged.connect(self.check_all_head)
+        self.head_2_cb.stateChanged.connect(self.check_all_head)
+
+    def check_all_arm(self, state):
+        self.arm_1_cb.setCheckState(state)
+        self.arm_2_cb.setCheckState(state)
+        self.arm_3_cb.setCheckState(state)
+        self.arm_4_cb.setCheckState(state)
+        self.arm_5_cb.setCheckState(state)
+        self.arm_6_cb.setCheckState(state)
+        self.arm_7_cb.setCheckState(state)
+
+    def check_all_head(self, state):
+        self.head_1_cb.setCheckState(state)
+        self.head_2_cb.setCheckState(state)
+
+    def check_all_hand(self, state):
+        self.hand_index_cb.setCheckState(state)
+        self.hand_mrl_cb.setCheckState(state)
+        self.hand_thumb_cb.setCheckState(state)
+
+    def check_all_gripper(self, state):
+        self.gripper_left_finger_cb.setCheckState(state)
+        self.gripper_right_finger_cb.setCheckState(state)
 
     def on_gravity(self):
         change_to_controller('gravity')

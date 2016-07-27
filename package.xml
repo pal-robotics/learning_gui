@@ -12,7 +12,6 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>rospy</build_depend>
   <run_depend>rospy</run_depend>
-  <run_depend>marco_tools</run_depend>
   <run_depend>simple_learning</run_depend>
   <run_depend>play_motion</run_depend>
 

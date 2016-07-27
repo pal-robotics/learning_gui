@@ -6,7 +6,6 @@ project(learning_gui)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   rospy
-  marco_tools
   simple_learning
   play_motion
 )
@@ -28,6 +27,7 @@ catkin_package()
 ## in contrast to setup.py, you can choose the destination
 install(PROGRAMS
   scripts/learning_gui.py
+  scripts/control_mode_management.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

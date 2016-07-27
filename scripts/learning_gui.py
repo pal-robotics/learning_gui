@@ -14,7 +14,7 @@ from actionlib import SimpleActionClient
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from controller_manager_msgs.srv import ListControllers, ListControllersRequest, ListControllersResponse
 from simple_learning.srv import Learn, LearnRequest, LearnResponse
-from marco_tools.control_mode_management import change_to_controller
+from control_mode_management import change_to_controller
 from copy import deepcopy
 import yaml
 import sys

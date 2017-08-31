@@ -88,6 +88,7 @@ Move the upper body to the first desired kinematic configuration by using the sl
 Note that after pressing the ***STOP RECORDING*** button the following part of the GUI which was disabled will be ready to be used:
 
 ![capture](play_back_and_export_options.png)
+
 There are three different buttons to play back the recorded motion:
 * Play 0.5X: plays back the motion at half the speed
 * Play 1X: plays back the original recorded motion

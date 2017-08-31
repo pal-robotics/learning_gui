@@ -139,9 +139,10 @@ class LearningGUI(QtGui.QMainWindow):
         self.set_callbacks_sliders()
         self.controllers_srv = rospy.ServiceProxy('/controller_manager/list_controllers',
                                                   ListControllers)
+        change_to_controller('position')
         self.controller_mode = 'position'
         self.gui_disabled_status = {'gravity_b': False,
-                                    'position_b': False,
+                                    'position_b': True,
                                     'start_continuous': False,
                                     'stop_recording': True,
                                     'capture_waypoint': False,
@@ -290,9 +291,13 @@ class LearningGUI(QtGui.QMainWindow):
 
     def on_gravity(self):
         change_to_controller('gravity')
+        self.gui_disabled_status['position_b'] = False
+        self.gui_disabled_status['gravity_b'] = True
 
     def on_position(self):
         change_to_controller('position')
+        self.gui_disabled_status['position_b'] = True
+        self.gui_disabled_status['gravity_b'] = False
 
     def on_start_continuous(self):
         req = LearnRequest()

@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on 03/06/16
-@author: sampfeiffer
+@author: Sammy Pfeiffer, Jordi Pages
+@email: {sam.pfeiffer, jordi.pages}@pal-robotics.com
 GUI to learn by demonstration for TIAGo
 """
 
@@ -106,6 +107,7 @@ class LearningGUI(QtGui.QMainWindow):
         rospy.loginfo("Getting joint limits from URDF...")
         self.joint_limits = get_joint_limits()
         self.rospack = rospkg.RosPack()
+        self.continuous_recording_mode_active = False
         path = self.rospack.get_path('learning_gui')
         print "path is: " + str(path)
         # Decide which GUI to use thanks to joint states...
@@ -140,8 +142,9 @@ class LearningGUI(QtGui.QMainWindow):
         self.controller_mode = 'position'
         self.gui_disabled_status = {'gravity_b': False,
                                     'position_b': False,
-                                    'start_b': False,
-                                    'stop_b': True,
+                                    'start_continuous': False,
+                                    'stop_recording': True,
+                                    'capture_waypoint': False,
                                     'play_05_b': True,
                                     'play_1_b': True,
                                     'play_2_b': True,
@@ -226,11 +229,14 @@ class LearningGUI(QtGui.QMainWindow):
         # Position
         self.position_b.clicked.connect(self.on_position)
 
-        # START
-        self.start_b.clicked.connect(self.on_start)
+        # START continuous mode
+        self.start_continuous.clicked.connect(self.on_start_continuous)
 
-        # STOP
-        self.stop_b.clicked.connect(self.on_stop)
+        # STOP continuous mode
+        self.stop_recording.clicked.connect(self.on_stop_recording)
+
+        # Record waypoint
+        self.capture_waypoint.clicked.connect(self.on_record_waypoint)
 
         # Play 0.5, 1x, 2x
         self.play_05_b.clicked.connect(self.on_play_05)
@@ -288,29 +294,57 @@ class LearningGUI(QtGui.QMainWindow):
     def on_position(self):
         change_to_controller('position')
 
-    def on_start(self):
+    def on_start_continuous(self):
         req = LearnRequest()
         s = rospy.ServiceProxy('/learn_by_demo_start', Learn)
         joints = self.get_enabled_joints()
-        print "on_start joints to learn: " + str(joints)
+        print "start continuous recording of joints: " + str(joints)
+        self.continuous_recording_mode_active = True
         req.joints_to_learn = joints
+        req.record_single_waypoint = False
         s.call(req)
-        self.gui_disabled_status['start_b'] = True
-        self.gui_disabled_status['stop_b'] = False
+        self.gui_disabled_status['start_continuous'] = True
+        self.gui_disabled_status['stop_recording'] = False
+        self.gui_disabled_status['capture_waypoint'] = True
+        self.gui_disabled_status['seconds_edit'] = True
 
-    def on_stop(self):
+    def on_stop_recording(self):
         req = LearnRequest()
         s = rospy.ServiceProxy('/learn_by_demo_stop', Learn)
         resp = s.call(req)
-        self.gui_disabled_status['stop_b'] = True
-        self.gui_disabled_status['start_b'] = False
+        if self.continuous_recording_mode_active:
+            self.gui_disabled_status['start_continuous'] = False
+        else:
+            self.gui_disabled_status['capture_waypoint'] = False
+        self.gui_disabled_status['stop_recording'] = True
         self.last_motion_text = resp.motion
         self.gui_disabled_status['play_05_b'] = False
         self.gui_disabled_status['play_1_b'] = False
         self.gui_disabled_status['play_2_b'] = False
         self.gui_disabled_status['save_b'] = False
+        self.gui_disabled_status['seconds_edit'] = False
+
+    def on_record_waypoint(self):
+         req = LearnRequest()
+         s = rospy.ServiceProxy('/learn_by_demo_start', Learn)
+         joints = self.get_enabled_joints()
+         print "record current status of joints: " + str(joints)
+         req.joints_to_learn = joints
+         req.record_single_waypoint = True
+         req.seconds_for_each_waypoint = float(self.seconds_edit.toPlainText())
+         rospy.loginfo("Seconds given for each waypoint: " + str(req.seconds_for_each_waypoint))
+         self.continuous_recording_mode_active = False
+         self.gui_disabled_status['start_continuous'] = True
+         self.gui_disabled_status['stop_recording'] = True
+         self.gui_disabled_status['capture_waypoint'] = True
+         self.gui_disabled_status['seconds_edit'] = True
+         s.call(req)
+         self.gui_disabled_status['stop_recording'] = False
+         self.gui_disabled_status['capture_waypoint'] = False
+
 
     def on_play_05(self):
+        change_to_controller('position')
         pm = SimpleActionClient('/play_motion', PlayMotionAction)
         pm.wait_for_server()
         pmg = PlayMotionGoal()
@@ -319,6 +353,7 @@ class LearningGUI(QtGui.QMainWindow):
         pm.wait_for_result(rospy.Duration(0.1))
 
     def on_play_1(self):
+        change_to_controller('position')
         pm = SimpleActionClient('/play_motion', PlayMotionAction)
         pm.wait_for_server()
         pmg = PlayMotionGoal()
@@ -327,6 +362,7 @@ class LearningGUI(QtGui.QMainWindow):
         pm.wait_for_result(rospy.Duration(0.1))
 
     def on_play_2(self):
+        change_to_controller('position')
         pm = SimpleActionClient('/play_motion', PlayMotionAction)
         pm.wait_for_server()
         pmg = PlayMotionGoal()
@@ -367,43 +403,6 @@ class LearningGUI(QtGui.QMainWindow):
         setattr(self, method_name, cb_method)
         return method_name
 
-  #   def capture_joints(self):
-  #       """
-  #   open_hand:
-  #     joints: [hand_thumb_joint, hand_index_joint, hand_mrl_joint]
-  #     points:
-  #     - positions: [-1.0, -1.0, -1.0]
-  #       time_from_start: 0.0
-  #     - positions: [0.0, 0.0, 0.0]
-  #       time_from_start: 1.5
-  #     meta:
-  #       name: open_hand
-  #       usage: demo
-  #       description: 'open_hand'
-  #       """
-
-  #       motion_name = "change_me_motion_name"
-  #       play_motion_str = "    " + motion_name + ":\n"
-  #       play_motion_str += "      joints: " + \
-  #           str(self.current_interesting_joints) + "\n"
-  #       play_motion_str += "      points:\n"
-  #       play_motion_str += "      - positions: "
-  #       positions = []
-  #       for j_name in self.current_interesting_joints:
-  #           positions.append(round(get_joint_val(j_name, self.last_js), 3))
-  #       play_motion_str += str(positions) + "\n"
-  #       play_motion_str += "        time_from_start: 0.0\n"
-  #       play_motion_str += """      meta:
-  #       name: change_me_motion_name
-  #       usage: demo
-  #       description: 'change_me_motion_name'"""
-
-  #       self.current_pose.setText(play_motion_str)
-  #       # if nothing was written in the last field
-  #       if self.full_motion.toPlainText() == "":
-  #           extra_header = """play_motion:
-  # motions:\n"""
-  #           self.full_motion.setText(extra_header + play_motion_str)
 
     def upload_to_param_server(self):
         if self.full_motion.toPlainText() != "":
@@ -417,13 +416,6 @@ class LearningGUI(QtGui.QMainWindow):
             rospy.logerr(
                 "Nothing in full motion field to upload to param server")
             return
-
-    # def play_motion(self):
-    #     pmg = PlayMotionActionGoal()
-    #     pmg.goal.motion_name = str(self.motion_name.toPlainText())
-    #     pmg.goal.skip_planning = False
-    #     rospy.loginfo("Sending goal: " + str(pmg.goal))
-    #     self.play_motion_pub.publish(pmg)
 
     def js_cb(self, data):
         """

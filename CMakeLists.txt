@@ -8,7 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
 )
 
-
+catkin_python_setup()
 ###################################
 ## catkin specific configuration ##
 ###################################

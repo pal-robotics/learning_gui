@@ -40,10 +40,28 @@ Open another terminal in the development computer and run the following instruct
 $ cd ~/learning_ws
 $ source ./devel/setup.bash
 $ export ROS_MASTER_URI=http://tiago-Xc:11311
-$ rosrun learning_gui learning_gui.py
+$ roslaunch learning_gui learning_gui.launch
 ```
 and the following GUI will show up:
 ![capture](learning_gui_gripper.png)
+
+The learning_gui launch file has a specific argument to record the joints of the wrist when the robot is in gravity. This requires that the gravity compensation controller installed on the TIAGo robot uses the seven joints of the arm. It could be checked by runningo n a terminal.
+
+```sh
+$ ssh pal@tiago-Xc
+$ rosservice call /controller_manager/list_controllers
+```
+
+And check which are the resources used for the gravity_compensation_controller.
+
+If the gravity_compensation_controller uses all the joints of the arm, then launch the GUI as follows:
+
+```sh
+$ cd ~/learning_ws
+$ source ./devel/setup.bash
+$ export ROS_MASTER_URI=http://tiago-Xc:11311
+$ roslaunch learning_gui learning_gui.launch wrist_in_position:=false
+```
 
 #### Select joints
 
@@ -73,7 +91,7 @@ On the other hand, with the ***waypoint recording*** mode the user will need to 
 First press the ***START CONTINUOUS RECORDING*** button. Note that this action will disable the _waypoint recording_ mode as they cannot be mixed. 
 The user can then start moving the upper body of the robot to teach the new motion in two ways:
 * **Moving individual joints using the sliders in the GUI**: all the joints of the upper body can be moved. It requires that the **control mode** is set to **Position**.
-* Moving the arm by **kinesthetic teaching**: the first 4 arm joints can be physically maneuvered by the user when selecting the **Gravity Compensation** control mode. The remaining arm and upper body joints can be still moved using the sliders provided in the GUI.
+* Moving the arm by **kinesthetic teaching**: the joints of the arm can be physically maneuvered by the user when selecting the **Gravity Compensation** control mode. If the gravity_compensation controller installed on the robot uses the seven joints it will learn all the joints. Otherwise it will learn the first four joints. The remaining arm and upper body joints can be still moved using the sliders provided in the GUI.
 
 In order to stop recording the motion press the ***STOP RECORDING*** button. 
 
@@ -123,7 +141,7 @@ play_motion:
           0.04393598728391329, 0.04409034002067276]
         time_from_start: 12.0
 ```
-This motion can be renamed by editing the tag **LBD_1X**. The motion stored in the yaml file, i.e. imagine it has been saved as _new_motion.yaml_, can be loaded in the rosparam server whenever needed as follows:
+This motion can be renamed by editing the tag **LBD_1X**. The motion stored in the yaml file, i.e. imagine it has been saved as new_motion.yaml_, can be loaded in the rosparam server whenever needed as follows:
 
 ```sh
 rosparam load new_motion.yaml

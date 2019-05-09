@@ -1,0 +1,8 @@
+<launch>
+<arg name="wrist_in_position" default="true"/>
+
+  <node pkg="learning_gui" name="learning_gui" type="learning_gui.py" output="screen">
+  	<param name="wrist_in_position" value="$(arg wrist_in_position)"/>
+  </node>
+
+</launch>

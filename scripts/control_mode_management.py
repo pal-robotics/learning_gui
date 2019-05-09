@@ -55,10 +55,11 @@ def get_running_controller(list_controller_response):
         return None
 
 
-def go_to_gravity_compensation(switch_srv):
+def go_to_gravity_compensation(switch_srv, start_wrist_in_position):
     scr = SwitchControllerRequest()
     scr.start_controllers.append('gravity_compensation')
-    scr.start_controllers.append('wrist_controller')
+    if start_wrist_in_position is True:
+        scr.start_controllers.append('wrist_controller')
     scr.stop_controllers.append('arm_controller')
     rospy.loginfo("Switch controllers: " + str(scr))
     resp = switch_srv.call(scr)
@@ -67,11 +68,12 @@ def go_to_gravity_compensation(switch_srv):
             "Could not switch. You may want to check rqt_console and try again.")
 
 
-def go_to_position(switch_srv):
+def go_to_position(switch_srv, start_wrist_in_position):
     scr = SwitchControllerRequest()
     scr.start_controllers.append('arm_controller')
     scr.stop_controllers.append('gravity_compensation')
-    scr.stop_controllers.append('wrist_controller')
+    if start_wrist_in_position is True:
+        scr.stop_controllers.append('wrist_controller')
     rospy.loginfo("Switch controllers: " + str(scr))
     resp = switch_srv.call(scr)
     if not resp.ok:
@@ -92,13 +94,14 @@ def go_to_position_arm_head_torso_stop_wbc(switch_srv):
             "Could not switch. You may want to check rqt_console and try again.")
 
 
-def go_to_position_arm_head_torso_stop_gravity(switch_srv):
+def go_to_position_arm_head_torso_stop_gravity(switch_srv, start_wrist_in_position):
     scr = SwitchControllerRequest()
     scr.start_controllers.append('arm_controller')
     scr.start_controllers.append('head_controller')
     scr.start_controllers.append('torso_controller')
     scr.stop_controllers.append('gravity_compensation')
-    scr.stop_controllers.append('wrist_controller')
+    if start_wrist_in_position is True:
+        scr.stop_controllers.append('wrist_controller')
     rospy.loginfo("Switch controllers: " + str(scr))
     resp = switch_srv.call(scr)
     if not resp.ok:
@@ -119,7 +122,7 @@ def go_to_whole_body_kinematics(switch_srv):
             "Could not switch. You may want to check rqt_console and try again.")
 
 
-def change_to_controller(controller_to_start):
+def change_to_controller(controller_to_start, start_wrist_in_position):
     list_controller_response = get_controllers_list()
     from_controller = get_running_controller(list_controller_response)
     if controller_to_start.startswith('w'):  # wholebodycontrol
@@ -146,7 +149,7 @@ def change_to_controller(controller_to_start):
     if from_controller == 'whole_body_kinematic_controler':
         if to_controller == 'gravity_compensation':
             go_to_position_arm_head_torso_stop_wbc(switch_srv)
-            go_to_gravity_compensation(switch_srv)
+            go_to_gravity_compensation(switch_srv, start_wrist_in_position)
         elif to_controller == 'position':
             go_to_position_arm_head_torso_stop_wbc(switch_srv)
         else:
@@ -154,16 +157,16 @@ def change_to_controller(controller_to_start):
 
     elif from_controller == 'gravity_compensation':
         if to_controller == 'whole_body_kinematic_controler':
-            go_to_position(switch_srv)
+            go_to_position(switch_srv, start_wrist_in_position)
             go_to_whole_body_kinematics(switch_srv)
         elif to_controller == 'position':
-            go_to_position(switch_srv)
+            go_to_position(switch_srv, start_wrist_in_position)
         else:
             rospy.logerr("Unexpected controller switch.")
 
     elif from_controller == 'position':
         if to_controller == 'gravity_compensation':
-            go_to_gravity_compensation(switch_srv)
+            go_to_gravity_compensation(switch_srv, start_wrist_in_position)
         elif to_controller == 'whole_body_kinematic_controler':
             go_to_whole_body_kinematics(switch_srv)
         else:

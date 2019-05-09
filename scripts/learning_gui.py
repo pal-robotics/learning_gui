@@ -34,7 +34,6 @@ ENDC = '\033[0m'
 
 # TODO: Take sliders stuff from https://github.com/pal-robotics/reem_movements_creator/blob/master/scripts/joints_sliders.py
 # TODO: link buttons to their actions
-# TODO: manage the gravity comp mode where we can command the wrist
 # TODO: manage putting in gray all the things that cannot be used (non clickable)
 # TODO: Implement the learning part as a node that accepts service calls for the start and stopping
 # TODO: take from https://github.com/awesomebytes/python_qt_tutorial the
@@ -102,7 +101,8 @@ def load_params_from_yaml(complete_file_path):
 
 class LearningGUI(QtGui.QMainWindow):
 
-    def __init__(self, parent=None):
+    def __init__(self, use_wrist_in_position, parent=None):
+        self.use_wrist_in_position = use_wrist_in_position
         super(LearningGUI, self).__init__(parent)
         rospy.loginfo("Getting joint limits from URDF...")
         self.joint_limits = get_joint_limits()
@@ -139,24 +139,43 @@ class LearningGUI(QtGui.QMainWindow):
         self.set_callbacks_sliders()
         self.controllers_srv = rospy.ServiceProxy('/controller_manager/list_controllers',
                                                   ListControllers)
-        change_to_controller('position')
+        change_to_controller('position', self.use_wrist_in_position)
         self.controller_mode = 'position'
-        self.gui_disabled_status = {'gravity_b': False,
-                                    'position_b': True,
-                                    'start_continuous': False,
-                                    'stop_recording': True,
-                                    'capture_waypoint': False,
-                                    'play_05_b': True,
-                                    'play_1_b': True,
-                                    'play_2_b': True,
-                                    'save_b': True,
-                                    'arm_1_slider': False,  # For wrist controller
-                                    'arm_2_slider': False,
-                                    'arm_3_slider': False,
-                                    'arm_4_slider': False}
+
+        if self.use_wrist_in_position is True:
+            self.gui_disabled_status = {'gravity_b': False,
+                                        'position_b': True,
+                                        'start_continuous': False,
+                                        'stop_recording': True,
+                                        'capture_waypoint': False,
+                                        'play_05_b': True,
+                                        'play_1_b': True,
+                                        'play_2_b': True,
+                                        'save_b': True,
+                                        'arm_1_slider': False,
+                                        'arm_2_slider': False,
+                                        'arm_3_slider': False,
+                                        'arm_4_slider': False}
+        else:
+            self.gui_disabled_status = {'gravity_b': False,
+                                        'position_b': True,
+                                        'start_continuous': False,
+                                        'stop_recording': True,
+                                        'capture_waypoint': False,
+                                        'play_05_b': True,
+                                        'play_1_b': True,
+                                        'play_2_b': True,
+                                        'save_b': True,
+                                        'arm_1_slider': False,
+                                        'arm_2_slider': False,
+                                        'arm_3_slider': False,
+                                        'arm_4_slider': False,
+                                        'arm_5_slider': False,
+                                        'arm_6_slider': False,
+                                        'arm_7_slider': False}
+
         self.set_buttons_disabled()
-        # check if we are in gravity to enable stuff related to it like
-        # commanding with the wrist
+
         self.set_callbacks_buttons()
         self.show()
 
@@ -290,12 +309,12 @@ class LearningGUI(QtGui.QMainWindow):
         self.gripper_right_finger_cb.setCheckState(state)
 
     def on_gravity(self):
-        change_to_controller('gravity')
+        change_to_controller('gravity', self.use_wrist_in_position)
         self.gui_disabled_status['position_b'] = False
         self.gui_disabled_status['gravity_b'] = True
 
     def on_position(self):
-        change_to_controller('position')
+        change_to_controller('position', self.use_wrist_in_position)
         self.gui_disabled_status['position_b'] = True
         self.gui_disabled_status['gravity_b'] = False
 
@@ -349,7 +368,7 @@ class LearningGUI(QtGui.QMainWindow):
 
 
     def on_play_05(self):
-        change_to_controller('position')
+        change_to_controller('position', self.use_wrist_in_position)
         pm = SimpleActionClient('/play_motion', PlayMotionAction)
         pm.wait_for_server()
         pmg = PlayMotionGoal()
@@ -358,7 +377,7 @@ class LearningGUI(QtGui.QMainWindow):
         pm.wait_for_result(rospy.Duration(0.1))
 
     def on_play_1(self):
-        change_to_controller('position')
+        change_to_controller('position', self.use_wrist_in_position)
         pm = SimpleActionClient('/play_motion', PlayMotionAction)
         pm.wait_for_server()
         pmg = PlayMotionGoal()
@@ -367,7 +386,7 @@ class LearningGUI(QtGui.QMainWindow):
         pm.wait_for_result(rospy.Duration(0.1))
 
     def on_play_2(self):
-        change_to_controller('position')
+        change_to_controller('position', self.use_wrist_in_position)
         pm = SimpleActionClient('/play_motion', PlayMotionAction)
         pm.wait_for_server()
         pmg = PlayMotionGoal()
@@ -454,7 +473,7 @@ class LearningGUI(QtGui.QMainWindow):
                                   'arm_5_joint',
                                   'arm_6_joint',
                                   'arm_7_joint']
-            elif self.controller_mode == 'gravity':
+        elif ((self.controller_mode == 'gravity') and (self.use_wrist_in_position == True)):
                 jt.joint_names = ['arm_5_joint',
                                   'arm_6_joint',
                                   'arm_7_joint']
@@ -505,7 +524,7 @@ class LearningGUI(QtGui.QMainWindow):
     def get_pub_for(self, joint_name):
         group = joint_name.split('_')[0]
         if group == 'arm':
-            if self.controller_mode == 'gravity':
+            if ((self.controller_mode == 'gravity') and (self.use_wrist_in_position == True)):
                 return self.wrist_pub
         return self.__getattribute__(group + '_pub')
 
@@ -529,25 +548,38 @@ class LearningGUI(QtGui.QMainWindow):
         req = ListControllersRequest()
         resp = self.controllers_srv.call(req)
         for c in resp.controller:
-            if c.name == 'wrist_controller':
-                if c.state == 'running':
-                    self.controller_mode = 'gravity'
-                    self.gui_disabled_status['arm_1_slider'] = True
-                    self.gui_disabled_status['arm_2_slider'] = True
-                    self.gui_disabled_status['arm_3_slider'] = True
-                    self.gui_disabled_status['arm_4_slider'] = True
-            elif c.name == 'arm_controller':
-                if c.state == 'running':
-                    self.controller_mode = 'position'
-                    self.gui_disabled_status['arm_1_slider'] = False
-                    self.gui_disabled_status['arm_2_slider'] = False
-                    self.gui_disabled_status['arm_3_slider'] = False
-                    self.gui_disabled_status['arm_4_slider'] = False
-
+            if self.use_wrist_in_position is True:
+                if c.name == 'wrist_controller':
+                    if c.state == 'running':
+                        self.controller_mode = 'gravity'
+                        self.gui_disabled_status['arm_1_slider'] = True
+                        self.gui_disabled_status['arm_2_slider'] = True
+                        self.gui_disabled_status['arm_3_slider'] = True
+                        self.gui_disabled_status['arm_4_slider'] = True
+                elif c.name == 'arm_controller':
+                    if c.state == 'running':
+                        self.controller_mode = 'position'
+                        self.gui_disabled_status['arm_1_slider'] = False
+                        self.gui_disabled_status['arm_2_slider'] = False
+                        self.gui_disabled_status['arm_3_slider'] = False
+                        self.gui_disabled_status['arm_4_slider'] = False
+            else:
+                if c.name == 'arm_controller':
+                    if c.state == 'running':
+                        self.controller_mode = 'position'
+                        self.gui_disabled_status['arm_1_slider'] = False
+                        self.gui_disabled_status['arm_2_slider'] = False
+                        self.gui_disabled_status['arm_3_slider'] = False
+                        self.gui_disabled_status['arm_4_slider'] = False
+                        self.gui_disabled_status['arm_5_slider'] = False
+                        self.gui_disabled_status['arm_6_slider'] = False
+                        self.gui_disabled_status['arm_7_slider'] = False
+                        
 
 if __name__ == '__main__':
     rospy.init_node('capture_gui')
     app = QtGui.QApplication(sys.argv)
     signal.signal(signal.SIGINT, signal.SIG_DFL)
-    window = LearningGUI()
+    use_wrist_in_position = rospy.get_param('/learning_gui/wrist_in_position')
+    window = LearningGUI(use_wrist_in_position)
     sys.exit(app.exec_())

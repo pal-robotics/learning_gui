@@ -45,16 +45,17 @@ $ roslaunch learning_gui learning_gui.launch
 and the following GUI will show up:
 ![capture](learning_gui_gripper.png)
 
-The learning_gui launch file has a specific argument to record the joints of the wrist when the robot is in gravity. This requires that the gravity compensation controller installed on the TIAGo robot uses the seven joints of the arm. It could be checked by runningo n a terminal.
+## Gravity compensation of the whole arm
+For the new wrist of TIAGo robot it's possible to enable the gravity_compensation_controller in the whole arm.
 
-```sh
-$ ssh pal@tiago-Xc
-$ rosservice call /controller_manager/list_controllers
+First the [gravity_compensation_controller_tutorial](https://github.com/pal-robotics/gravity_compensation_controller_tutorial) needs to be deployed on the robot. This implementation of the gravity_compensation_controller starts the joints of the wrist with no control to read the actual values of the encoders.
+
+Once deployed it needs to be loaded as follows:
 ```
+$ roslaunch gravity_compensation_controller_tutorial gravity_compensation_controller_tutorial.launch spawn:=false controller_ns:=gravity_compensation
+``` 
 
-And check which are the resources used for the gravity_compensation_controller.
-
-If the gravity_compensation_controller uses all the joints of the arm, then launch the GUI as follows:
+Then, launch the learning_gui launch file with the specific argument to record the joints of the wrist when the robot is in gravity.
 
 ```sh
 $ cd ~/learning_ws
